@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useProduct } from "../Context/ProductContext";
 import {
@@ -10,12 +10,19 @@ import {
   Ratio,
   Row,
 } from "react-bootstrap";
+import Popup from "../Components/Popup";
 
 const ProductDetail = () => {
+  const [showPopup, setShowPopup] = useState(false)
   const { products, cart, setCart } = useProduct();
   const { id } = useParams();
   const navigate = useNavigate();
   const product = products.find((item) => item.id === id);
+
+  const handleClose = () => {
+    setShowPopup(false)
+    setTimeout(()=>navigate(-1), 200)
+  }
 
   return (
     <div>
@@ -54,8 +61,7 @@ const ProductDetail = () => {
                   variant="success float-end"
                   onClick={() => {
                     setCart([...cart, product]);
-                    console.log(cart);
-                    navigate(-1);
+                    setShowPopup(true)
                   }}
                 >
                   เพิ่มลงในตะกร้า
@@ -65,6 +71,15 @@ const ProductDetail = () => {
           </Col>
         </Row>
       </Container>
+      <Popup
+        title="เพิ่มสินค้าเรียบร้อยแล้ว"
+        body="สินค้าถูกเพิ่มลงในตะกร้าสินค้าเรียบร้อยแล้ว"
+        footer={
+          <Button variant="success" onClick={handleClose}>เข้าใจแล้ว</Button>
+        }
+        show={showPopup}
+        onCancel={handleClose}
+      />
     </div>
   );
 };

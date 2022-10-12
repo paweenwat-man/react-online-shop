@@ -1,10 +1,12 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import { useProduct } from "../Context/ProductContext";
 import { Col, Row, Image, Table, Button, Container } from "react-bootstrap";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Pager from "../Components/Pager";
+import Popup from "../Components/Popup";
 
 const Products = () => {
+  const [showPopup, setShowPopup] = useState(false);
   const { products, cart, setCart } = useProduct();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -13,7 +15,6 @@ const Products = () => {
   const perPage = parseInt(searchParams.get("per_page")) || 10;
 
   let totalPrice = 0;
-  console.log(cart);
   cart.forEach((item) => {
     totalPrice += parseFloat(item.price);
   });
@@ -40,7 +41,7 @@ const Products = () => {
 
   const cartRecords = cart.map((item, index) => {
     return (
-      <tr>
+      <tr key={index}>
         <td>{index + 1}</td>
         <td>{item.id}</td>
         <td>{item.name}</td>
@@ -105,9 +106,8 @@ const Products = () => {
             <Button
               className="float-end"
               variant="danger"
-              onClick={() => {
-                setCart([]);
-              }}
+              onClick={() => setShowPopup(true)}
+              disabled={cart.length === 0}
             >
               ลบสินค้าทั้งหมด
             </Button>
@@ -119,6 +119,25 @@ const Products = () => {
         total={Math.ceil(products.length / perPage)}
         active={page}
         message={pagerMessage}
+      />
+      <Popup
+        title="ต้องการลบสินค้าทั้งหมดหรือไม่"
+        body="สินค้าทั้งหมดในตะกร้าจะถูกนำออก"
+        footer={
+          <>
+            <Button variant="success" onClick={()=>setShowPopup(false)}>
+              ยกเลิก
+            </Button>
+            <Button variant="danger" onClick={()=>{
+              setCart([])
+              setShowPopup(false)
+            }}>
+              ลบทั้งหมด
+            </Button>
+          </>
+        }
+        show={showPopup}
+        onCancel={() => setShowPopup(false)}
       />
     </div>
   );
