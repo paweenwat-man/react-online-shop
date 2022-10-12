@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useContext } from "react";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { ProductProvider } from "./Context/ProductContext";
+import Products from "./Pages/Products";
+import ProductDetail from "./Pages/ProductDetail";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <ProductProvider>
+        <Navbar bg="light" expand="lg">
+          <Container fluid>
+            <Navbar.Brand as={Link} to="/products">
+              React Shop
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto">
+                <Nav.Link as={Link} to="/products">
+                  สินค้าทั้งหมด
+                </Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+        <Routes>
+          <Route path="/" element={<Products />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+        </Routes>
+      </ProductProvider>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
