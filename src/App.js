@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { ShopProvider } from "./Context/ProductContext";
+import { ShopProvider } from "./Context/ShopContext";
 import Products from "./Pages/Products";
 import ProductDetail from "./Pages/ProductDetail";
 
