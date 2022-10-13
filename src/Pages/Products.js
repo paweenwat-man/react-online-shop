@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { useProduct } from "../Context/ProductContext";
+import { useShop } from "../Context/ShopContext";
 import { Col, Row, Image, Table, Button, Container } from "react-bootstrap";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Pager from "../Components/Pager";
 import Popup from "../Components/Popup";
 
 const Products = () => {
-  const [showPopup, setShowPopup] = useState(false);
-  const { products, cart, setCart } = useProduct();
+  const [showPopupAdd, setShowPopupAdd] = useState(false);
+  const [showPopupDelete, setShowPopupDelete] = useState(false);
+  const [showPopupDeleteAll, setShowPopupDeleteAll] = useState(false);
+
+  const { products, cart, setCart } = useShop();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -35,6 +38,18 @@ const Products = () => {
           <td>
             <Image thumbnail fluid src={item.image} alt="" />
           </td>
+          <td>
+            <Button
+              variant="success"
+              onClick={(e) => {
+                e.stopPropagation(); // prevent trigger onClick on parent element (e.g. <tr></tr> tag)
+                setCart(cart.concat(item));
+                setShowPopupAdd(true);
+              }}
+            >
+              เพิ่มสินค้า
+            </Button>
+          </td>
         </tr>
       );
     });
@@ -50,10 +65,12 @@ const Products = () => {
           <Button
             variant="danger"
             onClick={() => {
-              setCart(cart.filter((i) => i.id !== item.id));
+              const newCart = [...cart]
+              newCart.splice(index, 1)
+              setCart(newCart);
             }}
           >
-            นำออก
+            ลบสินค้า
           </Button>
         </td>
       </tr>
@@ -106,7 +123,7 @@ const Products = () => {
             <Button
               className="float-end"
               variant="danger"
-              onClick={() => setShowPopup(true)}
+              onClick={() => setShowPopupDeleteAll(true)}
               disabled={cart.length === 0}
             >
               ลบสินค้าทั้งหมด
@@ -121,23 +138,40 @@ const Products = () => {
         message={pagerMessage}
       />
       <Popup
+        title="เพิ่มสินค้าเรียบร้อยแล้ว"
+        body="สินค้าถูกเพิ่มลงในตะกร้าสินค้าเรียบร้อยแล้ว"
+        footer={
+          <Button variant="success" onClick={() => setShowPopupAdd(false)}>
+            เข้าใจแล้ว
+          </Button>
+        }
+        show={showPopupAdd}
+        onCancel={() => setShowPopupAdd(false)}
+      />
+      <Popup
         title="ต้องการลบสินค้าทั้งหมดหรือไม่"
         body="สินค้าทั้งหมดในตะกร้าจะถูกนำออก"
         footer={
           <>
-            <Button variant="success" onClick={()=>setShowPopup(false)}>
+            <Button
+              variant="success"
+              onClick={() => setShowPopupDeleteAll(false)}
+            >
               ยกเลิก
             </Button>
-            <Button variant="danger" onClick={()=>{
-              setCart([])
-              setShowPopup(false)
-            }}>
+            <Button
+              variant="danger"
+              onClick={() => {
+                setCart([]);
+                setShowPopupDeleteAll(false);
+              }}
+            >
               ลบทั้งหมด
             </Button>
           </>
         }
-        show={showPopup}
-        onCancel={() => setShowPopup(false)}
+        show={showPopupDeleteAll}
+        onCancel={() => setShowPopupDeleteAll(false)}
       />
     </div>
   );
