@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useProduct } from "../Context/ProductContext";
+import { useShop } from "../Context/ShopContext";
 import {
   Button,
   Card,
@@ -14,7 +14,7 @@ import Popup from "../Components/Popup";
 
 const ProductDetail = () => {
   const [showPopup, setShowPopup] = useState(false)
-  const { products, cart, setCart } = useProduct();
+  const { products, cart, setCart } = useShop();
   const { id } = useParams();
   const navigate = useNavigate();
   const product = products.find((item) => item.id === id);
@@ -64,7 +64,7 @@ const ProductDetail = () => {
                     setShowPopup(true)
                   }}
                 >
-                  เพิ่มลงในตะกร้า
+                  เพิ่มสินค้า
                 </Button>
               </Card.Body>
             </Card>
