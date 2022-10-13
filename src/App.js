@@ -1,14 +1,14 @@
 import React, { useState, useContext } from "react";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { ProductProvider } from "./Context/ProductContext";
+import { ShopProvider } from "./Context/ProductContext";
 import Products from "./Pages/Products";
 import ProductDetail from "./Pages/ProductDetail";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <ProductProvider>
+      <ShopProvider>
         <Navbar bg="light" expand="lg">
           <Container fluid>
             <Navbar.Brand as={Link} to="/products">
@@ -29,7 +29,7 @@ const App = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
-      </ProductProvider>
+      </ShopProvider>
     </BrowserRouter>
   );
 };
